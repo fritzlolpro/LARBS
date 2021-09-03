@@ -221,6 +221,9 @@ systembeepoff
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
 sudo -u "$name" mkdir -p "/home/$name/.cache/zsh/"
 
+# Generate user dirs
+sudo -u "$name" xdg-user-dirs-update
+
 # dbus UUID must be generated for Artix runit.
 dbus-uuidgen > /var/lib/dbus/machine-id
 
