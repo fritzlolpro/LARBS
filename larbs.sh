@@ -14,9 +14,9 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 	*) printf "Invalid option: -%s\\n" "$OPTARG" && exit 1 ;;
 esac done
 
-[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/lukesmithxyz/voidrice.git"
-[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/LukeSmithxyz/LARBS/master/progs.csv"
-[ -z "$aurhelper" ] && aurhelper="yay"
+[ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/fritzlolpro/dotfiles.git"
+[ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/fritzlolpro/LARBS/master/progs.csv"
+[ -z "$aurhelper" ] && aurhelper="pikaur"
 [ -z "$repobranch" ] && repobranch="master"
 
 ### FUNCTIONS ###
@@ -140,11 +140,16 @@ installationloop() { \
 putgitrepo() { # Downloads a gitrepo $1 and places the files in $2 only overwriting conflicts
 	dialog --infobox "Downloading and installing config files..." 4 60
 	[ -z "$3" ] && branch="master" || branch="$repobranch"
-	dir=$(mktemp -d)
+	#dir=$(mktemp -d)
 	[ ! -d "$2" ] && mkdir -p "$2"
-	chown "$name":wheel "$dir" "$2"
+	#chown "$name":wheel "$dir" "$2"
+  cd "$2"
+  dir=$(mkdir dotfiles)
+  chown "$name":wheel "$dir" "$2"
 	sudo -u "$name" git clone --recursive -b "$branch" --depth 1 --recurse-submodules "$1" "$dir" >/dev/null 2>&1
-	sudo -u "$name" cp -rfT "$dir" "$2"
+  cd $dir
+  sudo -u "$name" sh dotsInstall.sh -f
+	# sudo -u "$name" cp -rfT "$dir" "$2"
 	}
 
 systembeepoff() { dialog --infobox "Getting rid of that retarded error beep sound..." 10 50
